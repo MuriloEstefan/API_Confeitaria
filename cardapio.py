@@ -1,16 +1,12 @@
+from conexao import get_conexao
+from psycopg2.extras import RealDictCursor
+from flask import jsonify
+
 def get_cardapio():
-    cardapio = [
-        {
-            'id': 1,
-            'titulo': 'Bolo de Chocolate',
-            'descricao': 'O bolo é delicioso igual sua mamae',
-            'foto': ''
-        },
-        {
-            'id': 2,
-            'titulo': 'Bolo de morango',
-            'descricao': 'Delicioso bolo de morango, vou mostrar o morangao p c',
-            'foto': ''
-        }
-    ]
-    return cardapio
+    conn = get_conexao()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    cursor.execute("SELECT * FROM cardapio;")
+    cardapio = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(cardapio)
